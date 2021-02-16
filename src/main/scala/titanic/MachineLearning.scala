@@ -1,0 +1,5 @@
+package titanic
+
+object MachineLearning {
+
+}
