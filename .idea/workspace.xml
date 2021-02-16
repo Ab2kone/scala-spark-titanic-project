@@ -2,10 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b2e9b237-2578-4ec5-bacd-fabcce5ab1b5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/scala/titanic/DataCleaner.scala" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/scala/titanic/ModelTrain.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/titanic/DataSource.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/titanic/DataSource.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/titanic/DataWrangler.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/titanic/DataWrangler.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/titanic/FeatureEngineering.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/titanic/FeatureEngineering.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/titanic/ModelPredict.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/titanic/ModelPredict.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/titanic/SparkSessionCreator.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/titanic/SparkSessionCreator.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,7 +104,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1613464802239</updated>
-      <workItem from="1613464803932" duration="3175000" />
+      <workItem from="1613464803932" duration="3734000" />
     </task>
     <servers />
   </component>
