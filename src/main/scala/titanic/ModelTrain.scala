@@ -8,7 +8,7 @@ object ModelTrain {
     val spark = SparkSessionCreator.sparkSessionCreate()
 
     // train data
-    val rawTrainData = DataSourcer.rawTrainData(sparkSession = spark)
+    val rawTrainData = DataSource.rawTrainData(sparkSession = spark)
 
     // clean train data
     val cleanTrainData = DataCleaner.cleanData(dataFrame = rawTrainData)

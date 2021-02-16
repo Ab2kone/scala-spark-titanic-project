@@ -7,7 +7,7 @@ import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions.lit
 
 
-object DataSource extends App {
+object DataSource {
 
   org.apache.log4j.Logger.getLogger("org").setLevel(Level.OFF)
   org.apache.log4j.Logger.getLogger("akka").setLevel(Level.OFF)

@@ -4,7 +4,7 @@
 		module="titanic-build"
 		revision="0.1-SNAPSHOT"
 		status="integration"
-		publication="20210216085210"
+		publication="20210216094812"
 		e:sbtVersion="1.0" e:scalaVersion="2.12"
 	>
 		<description>

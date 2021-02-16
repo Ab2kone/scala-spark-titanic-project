@@ -6,16 +6,16 @@ import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
 import org.apache.spark.ml.feature.{IndexToString, StringIndexer, VectorAssembler, VectorIndexer}
 import org.apache.spark.sql.DataFrame
 
-// do final data preparations for machine learning here
-// define and run machine learning models here
-// this should generally return trained machine learning models and or labelled data
-// NOTE this may be merged with feature engineering to create a single pipeline
+// préparation final des données pour le ML
+// définition et exécutiondes modèles ML
+// cela devrait généralement renvoyer des modèles de ML formés et / ou des données étiquetées
+// REMARQUE ceci peut être fusionné avec feature engineering pour créer un seul pipeline
 
 object MachineLearning {
 
   def pipelineFit(dataFrame: DataFrame): PipelineModel = {
 
-    // define feature vector assembler
+    // défintion de l'assembleur de vecteurs des features
     val featureAssembler = new VectorAssembler()
       .setInputCols(Array[String](
         "Male",
@@ -29,7 +29,7 @@ object MachineLearning {
       )
       .setOutputCol("features")
 
-    // define random forest estimator
+    // définition de random forest estimator
     val rf = new RandomForestClassifier()
       .setLabelCol("label")
       .setFeaturesCol("features")
@@ -37,7 +37,7 @@ object MachineLearning {
       .setMaxDepth(10)
       .setSeed(1L)
 
-    // define gbt estimator
+    // défintion de gbt estimator
     val gbt = new GBTClassifier()
       .setLabelCol("label")
       .setFeaturesCol("features")
@@ -45,7 +45,8 @@ object MachineLearning {
       .setSeed(1L)
 
 
-    // chain indexers and forest in a Pipeline
+
+    // indexeur des string pour un pipeline forest
     val pipeline = new Pipeline()
       .setStages(
         Array(
@@ -57,10 +58,10 @@ object MachineLearning {
     // fit pipeline
     val pipelineModel = pipeline.fit(dataFrame)
 
-    // make predictions
+    // création de predictions
     val predictions = pipelineModel.transform(dataFrame)
 
-    // select (prediction, true label) and compute test error
+    // selection (prediction, true label) calcul des erreurs de test
     val evaluator = new MulticlassClassificationEvaluator()
       .setLabelCol("label")
       .setPredictionCol("prediction")
@@ -68,7 +69,7 @@ object MachineLearning {
     val accuracy = evaluator.evaluate(predictions)
     println("Test Error = " + (1.0 - accuracy))
 
-    // return fitted pipeline
+    // retourne fitted pipeline
     pipelineModel
 
   }

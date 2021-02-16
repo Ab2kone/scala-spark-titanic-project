@@ -4,12 +4,12 @@
 	<info
 		organisation="default"
 		module="titanic-build"
-		revision="0.1.0-SNAPSHOT"
+		revision="0.1-SNAPSHOT"
 		extra-scalaVersion="2.12"
 		extra-sbtVersion="1.0"
 		conf="optional"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, pom, scala-tool"
-		date="20210216090241"/>
+		date="20210216094812"/>
 	<dependencies>
 	</dependencies>
 </ivy-report>

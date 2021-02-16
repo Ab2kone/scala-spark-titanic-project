@@ -4,14 +4,15 @@ import org.apache.spark.ml.feature.{Bucketizer, OneHotEncoderEstimator, StringIn
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions.{split, when}
 
-// Do your feature engineering here
+
 
 object FeatureEngineering {
 
-  // function that returns a data frame with added  features
+  // fonction qui renvoie un bloc de données avec des fonctionnalités supplémentaires
   def featureData(dataFrame: DataFrame): DataFrame = {
 
-    // function to index embarked col
+
+    // fonction pour indexer la colonne embarked
     def embarkedIndexer(dataFrame: DataFrame): DataFrame = {
 
       val indexer = new StringIndexer()
@@ -24,7 +25,7 @@ object FeatureEngineering {
 
     }
 
-    // function to index pclass col
+    // fonction pour indexer la colonne Pclass
     def pclassIndexer(dataFrame: DataFrame): DataFrame = {
 
       val indexer = new StringIndexer()
@@ -37,55 +38,60 @@ object FeatureEngineering {
 
     }
 
-    // function to create age buckets
+
+    // fonction de création d'une tranche d'âge
     def ageBucketizer(dataFrame: DataFrame): DataFrame = {
 
-      // define splits for age buckets
+
+      // Définition des fragments de tranche d'âge
       val ageSplits = Array(0.0, 5.0, 18.0, 35.0, 60.0, 150.0)
 
-      // define age new bucketizer function
+
+      // Normalisation des âges
       val ageBucketizer = new Bucketizer()
         .setInputCol("Age")
         .setOutputCol("AgeGroup")
         .setSplits(ageSplits)
 
-      // add age buckets to input data frame
+
+      //Ajout de la tranche d'âge au données
       ageBucketizer.transform(dataFrame).drop("Age")
 
     }
 
-    // function to create fare buckets
+    // même chose précedemment
     def fareBucketizer(dataFrame: DataFrame): DataFrame = {
 
-      // define splits for fare buckets
+
       val fareSplits = Array(0.0, 10.0, 20.0, 30.0, 50.0, 100.0, 1000.0)
 
-      // define age new bucketizer function
+
       val fareBucketizer = new Bucketizer()
         .setInputCol("Fare")
         .setOutputCol("FareGroup")
         .setSplits(fareSplits)
 
-      // add fare buckets to input data frame
+
       fareBucketizer.transform(dataFrame).drop("Fare")
 
     }
 
-    // function to convert sex to binary
+
+    // Fonction de convertion de la colonne sex en binaire
     def sexBinerizer(dataFrame: DataFrame): DataFrame = {
 
-      // add binary sex column
+      // Ajout des valeurs binaire à la colonne
       val outputDataFrame = dataFrame.withColumn("Male", when(dataFrame("Sex").equalTo("male"), 1).otherwise(0))
 
-      // return data frame with binary sex column and drop original sex column
+      // retour de data frame avec une valeur binaire de la colonne sex avec suppression de l'ancienne colonne
       outputDataFrame.drop("Sex")
 
     }
 
-    // function to create title field
+    // Fonction de creation du titre
     def titleCreator(dataFrame: DataFrame): DataFrame = {
 
-      // extract title field from name column
+      // extraction du champs titre de la colonnes nom
       val outputData = dataFrame
         .withColumn("Title_String", split(split(dataFrame("Name"), ",")(1), "[.]")(0))
 
@@ -99,60 +105,64 @@ object FeatureEngineering {
 
     }
 
-    // function to create family size field
+
+    // fonction de création du champs taille pour faamille
     def familySizeCreator(dataFrame: DataFrame): DataFrame = {
 
-      // create field indicating number of people in family
+      // création d'un champ indiquant le nombre de personnes dans une famille
       val inputData = dataFrame.withColumn("FamilyMembers", dataFrame("Parch") + dataFrame("SibSp"))
 
-      // create family size field by bucketing family size field
+
+      // création d'un champ de taille de famille pour le champ précédent
       val outputData = inputData.withColumn("FamilySize",
         when(inputData("FamilyMembers")===0, 1)
           .when(inputData("FamilyMembers")>0 && inputData("FamilyMembers")<4, 2)
           .otherwise(3))
 
-      // return data frame with added family size field adn drop original columns used
+
+      // retourne le data frame avec un champ de taille de famille ajouté et supprime les colonnes d'origine utilisées
       outputData.drop("FamilyMembers").drop("Parch").drop("SibSp")
 
     }
 
-    // define function to create dummy variables from input columns
-    // NOTE: this will be replaced with a one hot encoder
+
+    // définir une fonction pour créer des variables factices à partir des colonnes d'entrée
+    // NOTE: cela sera remplacé par un encodeur à chaud
     def dummyCreator(dataFrame: DataFrame, dummyCols: Array[String]): DataFrame = {
 
-      // create temp immutable data frame to be used in for loop
+      // création d'une data frame immuable temporaire à utiliser dans la boucle for
       var data = dataFrame
 
-      // function to create binary columns for each unique value in input columns
+      // fonction pour créer des colonnes binaires pour chaque valeur unique dans les colonnes d'entrée
       for(col <- dummyCols) {
 
-        // create list of unique values in input column
+        // crée une liste de valeurs uniques dans la colonne d'entrée
         val uniqueValues = data.select(col).distinct().collect()
 
-        // create binary column for each value in unique value list
+        // crée une colonne binaire pour chaque valeur dans une liste de valeurs uniques
         for(i <- uniqueValues.indices) {
 
-          // define name for new column as the unique value
+          // définir le nom de la nouvelle colonne comme valeur unique
           var colName = uniqueValues(i).get(0)
 
-          // remove special characters from name for new column
+          // supprimer les caractères spéciaux du nom pour la nouvelle colonne
           colName = colName.toString.replaceAll("[.]", "_")
 
-          // add binary column to mutable data frame
+          // ajoute une colonne binaire à la trame de données mutable
           data = data.withColumn(col+"_"+colName, when(data(col)===uniqueValues(i)(0), 1).otherwise(0))
         }
 
-        // drop column that has been converted to binary
+        // supprimer la colonne qui a été convertie en binaire
         data = data.drop(col)
 
       }
 
-      // return transformed data frame
+     // retour de la dataframe transformé
       data
 
     }
 
-    // define cols to make dummy
+    // définir des colonne pour faire dummy
     val dummyCols = Array[String]("Embarked", "Pclass", "Title", "FamilySize", "FareGroup", "AgeGroup")
 
     val oneHotEncoder = new OneHotEncoderEstimator()
@@ -161,8 +171,8 @@ object FeatureEngineering {
 
 
     // create output data frame by transforming inout data frame with each function defined above
+    // création d'une DF de sortie en transformant la DF inout avec chaque fonction définie ci-dessus
     // NOTE: this will be replaced with a pipeline
-    // SOON!
     val oneHotModel = oneHotEncoder.fit(
       pclassIndexer(
         embarkedIndexer(
@@ -197,7 +207,7 @@ object FeatureEngineering {
       )
     )
 
-    // return data frame with added features
+    // retour de la DF avec les nouvelles fonctionnalités ajoutés
     outputData
 
   }

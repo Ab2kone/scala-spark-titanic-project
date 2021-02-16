@@ -2,15 +2,15 @@ package titanic
 
 import org.apache.spark.ml.PipelineModel
 
-object ModelPredict {
+object ModelPredict extends App {
 
-  def main(args: Array[String]): Unit = {
 
-    // create spark session
+
+    // création d'un spark session
     val spark = SparkSessionCreator.sparkSessionCreate()
 
     // train data
-    val rawTestData = DataSourcer.rawTestData(sparkSession = spark)
+    val rawTestData = DataSource.rawTestData(sparkSession = spark)
 
     // clean train data
     val cleanTestData = DataCleaner.cleanData(dataFrame = rawTestData)
@@ -19,16 +19,16 @@ object ModelPredict {
     val featureTestData = FeatureEngineering.featureData(dataFrame = cleanTestData)
 
     // load fitted pipeline
-    val fittedPipeline = PipelineModel.load("./pipelines/fitted-pipeline")
+    val fittedPipeline = PipelineModel.load("/home/smileci/sample_bdd/titanic/titanic/fitted-pipeline")
 
     // make predictions
     val predictions = fittedPipeline.transform(dataset = featureTestData)
 
     // save predictions
-    // this saves a csv in the format required by kaggle
-    // ie. only the passenger_id and survived cols
+    // cela enregistre un csv au format requis par kaggle
+    // c'est à dire. seulement le passager_id et les cols survivants
     OutputSaver.predictionsSaver(dataFrame = predictions)
 
-  }
+
 
 }
